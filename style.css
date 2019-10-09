@@ -4,10 +4,16 @@ h1 {
     font-weight: bold;
 }
 
-ul {
-    display: flex;
+.card {
+    height: 380px;
 }
 
-li {
-    flex: auto;
+.card-title {
+    font-weight: bold !important;
+    font-size: 15px !important;
+    line-height: 20px !important;
+}
+
+.logo {
+    width: 150px;
 }

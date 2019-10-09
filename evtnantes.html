@@ -5,26 +5,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <title>Evènements Nantes</title>
 </head>
 
 <body>
-    <h1>Evènements Nantes Métropole</h1>
+    <div class="header">
+        <h1>
+            <img class="logo" src="medias/logo_nm.png" alt="">
+        </h1>
+        <h1>Evènements Nantes Métropole</h1>
+    </div>
     <div id="displayEvents">
-        <ul>
-            <li v-for="e in events">
-                <span>{{e.fields.nom}}</span><br>
-                <span>{{e.fields.lieu}}</span><br>
-                <span>
-                    <img :src="e.fields.media_1" alt="">
-                </span>
-            </li>
-        </ul>
+        <div class="container">
+            <div class="row">
+                <div v-for="e in events" class="event col l3 m6 s12">
+                    <div class="card">
+                        <div class="card-image">
+                            <img :src="e.fields.media_1" alt="">
+                        </div>
+                        <div class="card-content">
+                            <p>{{e.fields.lieu}}</p>
+                            <p class="card-title blue-text text-darken-2">{{e.fields.nom}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
