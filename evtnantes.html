@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Evènements Nantes</title>
+</head>
+
+<body>
+    <h1>Evènements Nantes Métropole</h1>
+    <div id="displayEvents">
+        <ul>
+            <li v-for="e in events">
+                <span>{{e.fields.nom}}</span><br>
+                <span>{{e.fields.lieu}}</span><br>
+                <span>
+                    <img :src="e.fields.media_1" alt="">
+                </span>
+            </li>
+        </ul>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+        var apiURL =
+            "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_agenda-evenements-nantes-nantes-metropole&facet=emetteur&facet=rubrique&facet=lieu&facet=ville";
+
+        var displayEvents = new Vue({
+            el: '#displayEvents',
+            data: {
+                events: null
+            },
+            created: function () {
+                this.mounted();
+            },
+            methods: {
+                mounted() {
+                    axios
+                        .get(apiURL)
+                        .then(response => {
+                            console.log(response);
+                            this.events = response.data.records;
+                        })
+                        .catch(error => {
+                            console.log(error);
+                            this.error = true;
+                        })
+                }
+            }
+
+        })
+    </script>
+
+</body>
+
+</html>
