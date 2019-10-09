@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <title>Evènements Nantes</title>
 </head>
@@ -18,23 +19,44 @@
         </h1>
         <h1>Evènements Nantes Métropole</h1>
     </div>
-    <div id="displayEvents">
+    <form id="displayEvents" v-cloak>
+        <div>
+            <ul class="nav">
+                <li><a class="btn-large waves-effect waves-light indigo darken-4 grid-icon"
+                        v-bind:class="{ 'active': layout == 'grid'}" v-on:click="layout = 'grid'"><i
+                            class="material-icons">view_module</i></a></li>
+                <li> <a class="btn-large waves-effect waves-light indigo darken-4  list-icon"
+                        v-bind:class="{ 'active': layout == 'list'}" v-on:click="layout = 'list'"><i
+                            class="material-icons">view_list</i></a></li>
+            </ul>
+        </div>
         <div class="container">
-            <div class="row">
-                <div v-for="e in events" class="event col l3 m6 s12">
-                    <div class="card">
-                        <div class="card-image">
-                            <img :src="e.fields.media_1" alt="">
-                        </div>
-                        <div class="card-content">
-                            <p>{{e.fields.lieu}}</p>
-                            <p class="card-title blue-text text-darken-2">{{e.fields.nom}}</p>
+            <div v-if="layout == 'grid'" class="grid">
+                <div class="row">
+                    <div v-for="e in events" class="event col l3 m6 s12">
+                        <div class="card">
+                            <div class="card-image">
+                                <img :src="e.fields.media_1" alt="">
+                            </div>
+                            <div class="card-content">
+                                <p>{{e.fields.lieu}}</p>
+                                <p class="card-title blue-text text-darken-2">{{e.fields.nom}}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <ul v-if="layout == 'list'" class="collection list">
+                <li class="collection-item avatar" v-for="e in events">
+                    <img :src="e.fields.media_1" class="circle">
+                    <span class="title blue-text text-darken-3">{{e.fields.nom}}</span>
+                    <p>{{e.fields.lieu}}</p>
+                </li>
+            </ul>
         </div>
-    </div>
+
+    </form>
+
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
@@ -45,7 +67,8 @@
         var displayEvents = new Vue({
             el: '#displayEvents',
             data: {
-                events: null
+                events: null,
+                layout: "grid",
             },
             created: function () {
                 this.mounted();

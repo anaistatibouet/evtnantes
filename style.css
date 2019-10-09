@@ -8,7 +8,8 @@ h1 {
     height: 380px;
 }
 
-.card-title {
+.card-title,
+.title {
     font-weight: bold !important;
     font-size: 15px !important;
     line-height: 20px !important;
@@ -16,4 +17,17 @@ h1 {
 
 .logo {
     width: 150px;
+}
+
+.material-icons {
+    font-size: 20ex;
+    text-align: center
+}
+
+.nav {
+    display: inline;
+}
+
+.nav li {
+    margin-bottom: 10px;
 }
