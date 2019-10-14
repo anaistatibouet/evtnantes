@@ -60,10 +60,17 @@
                   <img :src="e.fields.media_1" alt="" />
                 </div>
                 <div class="card-content">
-                  <p>{{ e.fields.lieu }}</p>
-                  <p>{{ e.fields.date }}</p>
                   <p class="card-title blue-text text-darken-2">
                     {{ e.fields.nom }}
+                    <span v-if=" e.fields.gratuit == 'oui' "> (GRATUIT)</span>
+                    <span v-else>
+                      <i class="tiny material-icons">euro_symbol</i></span
+                    >
+                  </p>
+                  <p>{{ e.fields.lieu }}</p>
+                  <p>
+                    {{ e.fields.date | formatDate }} début à
+                    {{ e.fields.heure_debut }}
                   </p>
                 </div>
               </div>
@@ -71,13 +78,22 @@
           </div>
         </div>
         <ul v-if="layout == 'list'" class="collection list">
-          <li class="collection-item avatar" v-for="e in events">
+          <li class="collection-item avatar" v-for="e in filtredEvents">
             <img :src="e.fields.media_1" class="circle" />
             <span class="title blue-text text-darken-3">{{
               e.fields.nom
             }}</span>
             <p>{{ e.fields.lieu }}</p>
-            <p class="align-right">{{ e.fields.date | formatDate }}</p>
+            <p class="align-right">
+              {{ e.fields.date | formatDate }} début à
+              {{ e.fields.heure_debut }}
+            </p>
+            <p>
+              <span v-if=" e.fields.gratuit == 'oui' ">(GRATUIT)</span>
+              <span v-else>
+                <i class="tiny material-icons">euro_symbol</i></span
+              >
+            </p>
           </li>
         </ul>
       </div>
@@ -92,7 +108,7 @@
 
       Vue.filter("formatDate", function(value) {
         if (value) {
-          return moment(value).format("dd/mm/yyyy");
+          return moment(String(value)).format("MM/DD/YYYY");
         }
       });
 

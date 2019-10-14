@@ -5,7 +5,7 @@ h1 {
 }
 
 .card {
-  height: 380px;
+  height: 400px;
 }
 
 .card-title,
@@ -29,7 +29,7 @@ h1 {
 }
 
 .nav a.active {
-  background-color: rgb(109, 109, 109) !important;
+  background-color: rgb(106, 0, 116) !important;
 }
 
 .nav li {
