@@ -1,96 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
     <title>Evènements Nantes</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="header">
-        <h1>
-            <img class="logo" src="medias/logo_nm.png" alt="">
-        </h1>
-        <h1>Evènements Nantes Métropole</h1>
+      <h1>
+        <img class="logo" src="medias/logo_nm.png" alt="" />
+      </h1>
+      <h1>Evènements Nantes Métropole</h1>
     </div>
     <form id="displayEvents" v-cloak>
-        <div>
-            <ul class="nav">
-                <li><a class="btn-large waves-effect waves-light indigo darken-4 grid-icon"
-                        v-bind:class="{ 'active': layout == 'grid'}" v-on:click="layout = 'grid'"><i
-                            class="material-icons">view_module</i></a></li>
-                <li> <a class="btn-large waves-effect waves-light indigo darken-4  list-icon"
-                        v-bind:class="{ 'active': layout == 'list'}" v-on:click="layout = 'list'"><i
-                            class="material-icons">view_list</i></a></li>
-            </ul>
+      <div>
+        <div class="input-field col s6">
+          <i class="material-icons prefix">search</i>
+          <input id="icon_prefix" type="text" v-model="searchString" />
+          <label for="icon_prefix">Enter your search terms</label>
         </div>
-        <div class="container">
-            <div v-if="layout == 'grid'" class="grid">
-                <div class="row">
-                    <div v-for="e in events" class="event col l3 m6 s12">
-                        <div class="card">
-                            <div class="card-image">
-                                <img :src="e.fields.media_1" alt="">
-                            </div>
-                            <div class="card-content">
-                                <p>{{e.fields.lieu}}</p>
-                                <p class="card-title blue-text text-darken-2">{{e.fields.nom}}</p>
-                            </div>
-                        </div>
-                    </div>
+        <ul class="nav">
+          <li>
+            <a
+              class="btn-large waves-effect waves-light indigo darken-4 grid-icon"
+              v-bind:class="{ 'active': layout == 'grid'}"
+              v-on:click="layout = 'grid'"
+              ><i class="material-icons">view_module</i></a
+            >
+          </li>
+          <li>
+            <a
+              class="btn-large waves-effect waves-light indigo darken-4  list-icon"
+              v-bind:class="{ 'active': layout == 'list'}"
+              v-on:click="layout = 'list'"
+              ><i class="material-icons">view_list</i></a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="container">
+        <div v-if="layout == 'grid'" class="grid">
+          <div class="row">
+            <div v-for="e in filtredEvents" class="event col l3 m6 s12">
+              <div class="card">
+                <div class="card-image">
+                  <img :src="e.fields.media_1" alt="" />
                 </div>
+                <div class="card-content">
+                  <p>{{ e.fields.lieu }}</p>
+                  <p>{{ e.fields.date }}</p>
+                  <p class="card-title blue-text text-darken-2">
+                    {{ e.fields.nom }}
+                  </p>
+                </div>
+              </div>
             </div>
-            <ul v-if="layout == 'list'" class="collection list">
-                <li class="collection-item avatar" v-for="e in events">
-                    <img :src="e.fields.media_1" class="circle">
-                    <span class="title blue-text text-darken-3">{{e.fields.nom}}</span>
-                    <p>{{e.fields.lieu}}</p>
-                </li>
-            </ul>
+          </div>
         </div>
-
+        <ul v-if="layout == 'list'" class="collection list">
+          <li class="collection-item avatar" v-for="e in events">
+            <img :src="e.fields.media_1" class="circle" />
+            <span class="title blue-text text-darken-3">{{
+              e.fields.nom
+            }}</span>
+            <p>{{ e.fields.lieu }}</p>
+            <p class="align-right">{{ e.fields.date | formatDate }}</p>
+          </li>
+        </ul>
+      </div>
     </form>
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <script>
-        var apiURL =
-            "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_agenda-evenements-nantes-nantes-metropole&facet=emetteur&facet=rubrique&facet=lieu&facet=ville";
+      var apiURL =
+        "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_agenda-evenements-nantes-nantes-metropole&facet=emetteur&facet=rubrique&facet=lieu&facet=ville";
 
-        var displayEvents = new Vue({
-            el: '#displayEvents',
-            data: {
-                events: null,
-                layout: "grid",
-            },
-            created: function () {
-                this.mounted();
-            },
-            methods: {
-                mounted() {
-                    axios
-                        .get(apiURL)
-                        .then(response => {
-                            console.log(response);
-                            this.events = response.data.records;
-                        })
-                        .catch(error => {
-                            console.log(error);
-                            this.error = true;
-                        })
-                }
+      Vue.filter("formatDate", function(value) {
+        if (value) {
+          return moment(value).format("dd/mm/yyyy");
+        }
+      });
+
+      var displayEvents = new Vue({
+        el: "#displayEvents",
+        data: {
+          events: null,
+          layout: "grid",
+          searchString: ""
+        },
+        computed: {
+          // A computed property that holds only those events that match the searchString.
+          filtredEvents: function() {
+            var events_array = this.events,
+              searchString = this.searchString;
+
+            if (!searchString) {
+              return events_array;
             }
 
-        })
+            searchString = searchString.trim().toLowerCase();
+
+            events_array = events_array.filter(function(item) {
+              if (item.fields.nom.toLowerCase().indexOf(searchString) !== -1) {
+                return item;
+              }
+            });
+
+            // Return an array with the filtered data.
+            return events_array;
+          }
+        },
+        created: function() {
+          this.mounted();
+        },
+        methods: {
+          mounted() {
+            axios
+              .get(apiURL)
+              .then(response => {
+                console.log(response);
+                this.events = response.data.records;
+              })
+              .catch(error => {
+                console.log(error);
+                this.error = true;
+              });
+          }
+        }
+      });
     </script>
-
-</body>
-
+  </body>
 </html>
